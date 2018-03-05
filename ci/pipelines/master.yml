@@ -1,4 +1,17 @@
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+
 resources:
+  - name: master-pr
+    type: pull-request
+    source:
+      access_token: {{github-access-token}}
+      uri: https://github.com/brandocorp-concourse/concourse-omnitruck-resource.git
+      repo: brandocorp/concourse-omnitruck-
+      base: master
   - name: source-repo
     type: git
     source:
