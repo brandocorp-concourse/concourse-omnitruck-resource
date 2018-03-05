@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -e
+
+exec 3>&1 # make stdout available as fd 3 for the result
+exec 1>&2 # redirect all output to stderr for logging
+
+PATH=/usr/local/bin:$PATH
+
+OMNITRUCK="https://omnitruck.chef.io"
+
+load_version(){
+  local target=$1
+  local url="$OMNITRUCK/$channel/$product/metadata"
+  local query="v=$version&p=$platform&pv=$platform_version&m=$architecture"
+
+  echo "Fetching release data for $target" >&2
+
+  metadata=$(curl -s "$url?$query")
+  version=$(echo "$metadata" | grep version | cut -f 2)
+  checksum=$(echo "$metadata" | grep sha256 | cut -f 2)
+  download=$(echo "$metadata" | grep url | cut -f 2)
+
+  echo "$metadata" >&2
+}
+
+main(){
+  payload=$(mktemp /tmp/resource-in.XXXXXX)
+  cat > $payload <&0
+  product=$(jq -r '.source.product' < $payload)
+  channel=$(jq -r '.source.channel' < $payload)
+  platform=$(jq -r '.source.platform' < $payload)
+  platform_version=$(jq -r '.source.platform_version' < $payload)
+  architecture=$(jq -r '.source.architecture' < $payload)
+  version=$(jq -r '.version.release // "latest"' < $payload)
+
+  load_version ${version}
+
+  jq -M -n "[{release: $(echo $version | jq -R . )}]" >&3
+}
+
+main

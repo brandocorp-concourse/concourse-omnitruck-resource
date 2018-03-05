@@ -1,0 +1,20 @@
+resources:
+  - name: source-repo
+    type: git
+    source:
+      uri: https://github.com/brandocorp-concourse/concourse-omnitruck-resource.git
+    webhook_token: a253c22f-d0ed-499f-b958-2963cefc3b91
+  - name: omnitruck-resource-image
+    type: docker-image
+    source:
+      repository: brandocorp/concourse-omnitruck-resource
+
+jobs:
+  - name: build-resource-image
+    plan:
+      - get: source-repo
+        trigger: true
+      - put: omnitruck-resource-image
+        params:
+          build: source-repo
+          tag_as_latest: true

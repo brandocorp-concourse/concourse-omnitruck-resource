@@ -1,0 +1,12 @@
+{
+  "source":{
+    "channel": "stable",
+    "product": "chefdk",
+    "platform": "ubuntu",
+    "platform_version": "16.04",
+    "architecture": "x86_64"
+  },
+  "version": {
+    "release": "latest"
+  }
+}

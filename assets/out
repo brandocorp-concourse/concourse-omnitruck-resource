@@ -1,0 +1,4 @@
+#!/bin/sh
+# This is a noop
+echo '{}'
+exit 0
