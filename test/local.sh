@@ -4,6 +4,9 @@ SUCCESS='\033[0;32m'
 RESET='\033[0m'
 TMPDIR="$(mktemp -d)"
 
+SCRIPT=$0
+TEST=$(readlink -fs $(dirname $SCRIPT))
+REPO=$(dirname $TEST)
 
 info(){
   echo "$1"
@@ -25,7 +28,7 @@ validate_output(){
 
 test_check_null_version(){
   echo "When no version is requested"
-  local output=$(bash assets/check < test/fixtures/null.json 2> /dev/null)
+  local output=$(bash $REPO/assets/check < $REPO/test/fixtures/null.json 2> /dev/null)
   local latest=$(validate_output "$output")
   if [ $? -eq 0 ]; then
     log_success "it retuns the latest version ($latest)"
@@ -36,7 +39,7 @@ test_check_null_version(){
 
 test_check_latest_version(){
   echo "When the 'latest' version is requested"
-  local output=$(bash assets/check < test/fixtures/latest.json 2> /dev/null)
+  local output=$(bash $REPO/assets/check < $REPO/test/fixtures/latest.json 2> /dev/null)
   local latest=$(validate_output "$output")
   if [ $? -eq 0 ]; then
     log_success "it retuns the latest version ($latest)"
@@ -47,7 +50,7 @@ test_check_latest_version(){
 
 test_check_requested_version(){
   echo "When a specific version is requested"
-  local output=$(bash assets/check < test/fixtures/requested.json 2> /dev/null)
+  local output=$(bash $REPO/assets/check < $REPO/test/fixtures/requested.json 2> /dev/null)
   local requested=$(validate_output "$output")
   if [ $? -eq 0 ]; then
     log_success "it retuns the requested version ($requested)"
@@ -87,7 +90,7 @@ EOS
 
 test_in_null_version(){
   echo "When no version is present in the input data"
-  local output=$(bash assets/in $TMPDIR < test/fixtures/null.json 2> /dev/null)
+  local output=$(bash $REPO/assets/in $TMPDIR < $REPO/test/fixtures/null.json 2> /dev/null)
   if [ $? -eq 0 ]; then
     log_success "it fails with an error message"
   else
@@ -97,7 +100,7 @@ test_in_null_version(){
 
 test_in_latest_version(){
   echo "When the latest version is requested"
-  local output=$(bash assets/in $TMPDIR < test/fixtures/latest.json 2> /dev/null)
+  local output=$(bash $REPO/assets/in $TMPDIR < $REPO/test/fixtures/latest.json 2> /dev/null)
   local requested=$(validate_download "$output")
   if [ $? -eq 0 ]; then
     log_success "it downloads the requested version ($requested)"
@@ -108,7 +111,7 @@ test_in_latest_version(){
 
 test_in_requested_version(){
   echo "When a specific version is requested"
-  local output=$(bash assets/in $TMPDIR < test/fixtures/requested.json 2> /dev/null)
+  local output=$(bash $REPO/assets/in $TMPDIR < $REPO/test/fixtures/requested.json 2> /dev/null)
   local requested=$(validate_download "$output")
   if [ $? -eq 0 ]; then
     log_success "it downloads the requested version ($requested)"
