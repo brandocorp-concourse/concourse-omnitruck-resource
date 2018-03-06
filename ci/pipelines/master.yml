@@ -92,4 +92,6 @@ jobs:
   - put: master-pr
     params:
       path: master-pr
-      method: merge
+      status: success
+      merge:
+        method: merge
