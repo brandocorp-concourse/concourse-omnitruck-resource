@@ -1,7 +1,7 @@
-FROM debian:8
+FROM alpine:latest
 
-RUN apt-get -y update \
-  && apt-get -y install curl jq
+RUN apk update  \
+  && apk add bash coreutils curl jq make
 
 ADD assets /opt/resource
 RUN chmod +x /opt/resource/*

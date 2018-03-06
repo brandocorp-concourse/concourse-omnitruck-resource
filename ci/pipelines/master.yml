@@ -1,18 +1,42 @@
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+
 resources:
+  - name: master-pr
+    type: pull-request
+    source:
+      access_token: {{github-access-token}}
+      uri: https://github.com/brandocorp-concourse/concourse-omnitruck-resource.git
+      repo: brandocorp/concourse-omnitruck-
+      base: master
   - name: source-repo
     type: git
     source:
       uri: https://github.com/brandocorp-concourse/concourse-omnitruck-resource.git
     webhook_token: a253c22f-d0ed-499f-b958-2963cefc3b91
+  - name: alpine-base-image
+    type: docker-image
+    source:
+      repository: alpine
+      tag: latest
+      username: {{docker-username}}
+      password: {{docker-password}}
   - name: omnitruck-resource-image
     type: docker-image
     source:
       repository: brandocorp/concourse-omnitruck-resource
+      username: {{docker-username}}
+      password: {{docker-password}}
 
 jobs:
   - name: build-resource-image
     plan:
       - get: source-repo
+        trigger: true
+      - get: alpine-base-image
         trigger: true
       - put: omnitruck-resource-image
         params:

@@ -23,7 +23,7 @@ download_version(){
 
   echo "$metadata" >&2
 
-  curl -C- -sLOJ "$download"
+  curl -C- -sLJ -o $destination/$(basename $download) "$download"
 }
 
 main(){
@@ -37,7 +37,7 @@ main(){
   architecture=$(jq -r '.source.architecture' < $payload)
   version=$(jq -r '.version.release' < $payload)
 
-  if [ -z "$version" ]; then
+  if [[ "null" == "$version" ]]; then
     echo "Could not find version inforation. A verison must be specified." >&2
     exit 1
   fi
@@ -55,4 +55,4 @@ main(){
   }" >&3
 }
 
-main
+main $1
