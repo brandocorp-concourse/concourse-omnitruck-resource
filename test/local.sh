@@ -1,4 +1,4 @@
-#!/bin/bash -vex
+#!/bin/bash -e
 FAILURE='\033[0;31m'
 SUCCESS='\033[0;32m'
 RESET='\033[0m'
@@ -79,7 +79,9 @@ validate_download(){
   cat > $TMPDIR/sha256 <<EOS
 $sha256 $TMPDIR/$package
 EOS
-  sha256sum -c sha256 2>&1 >/dev/null
+
+  cd $TMPDIR && (sha256sum -c sha256 2>&1) > /dev/null
+  cd - >/dev/null
   echo $package
 }
 

@@ -9,7 +9,7 @@ image: check
 	docker build $(PWD) -f Dockerfile -t brandocorp/concourse-omnitruck-resource:$(VERSION)
 
 test: check image
-	test/ci.sh
+	test/local.sh
 
 publish: image test
 	docker push brandocorp/concourse-omnitruck-resource:$(VERSION)
