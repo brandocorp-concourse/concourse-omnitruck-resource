@@ -2,7 +2,7 @@
 FAILURE='\033[0;31m'
 SUCCESS='\033[0;32m'
 RESET='\033[0m'
-TMPDIR="$(mktemp -d -p $(pwd)/test tmp.XXXXXXXX)"
+TMPDIR="$(mktemp -d)"
 
 
 info(){
