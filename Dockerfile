@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 RUN apk update  \
-  && apk add curl jq
+  && apk add coreutils curl jq
 
 ADD assets /opt/resource
 RUN chmod +x /opt/resource/*
